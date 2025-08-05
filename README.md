@@ -22,14 +22,14 @@ The model uses the following lightweight URL features:
 - Python ≥ 3.7
 - Required Python packages:
  
-  pip install pandas scikit-learn joblib liac-arff
+      pip install pandas scikit-learn joblib liac-arff
 📦 Installation
-Install Python from https://www.python.org/downloads/
+      Install Python from https://www.python.org/downloads/
 
 Install the required libraries:
 
 
-pip install pandas scikit-learn joblib liac-arff
+     pip install pandas scikit-learn joblib liac-arff
 📁 Dataset
 The original dataset is in .arff format and needs to be converted to .csv before training.
 
@@ -37,27 +37,32 @@ The original dataset is in .arff format and needs to be converted to .csv before
 Use the following code to convert the dataset:
 
 
-from scipy.io import arff
-import pandas as pd
+     from scipy.io import arff
+     import pandas as pd
 
-data = arff.loadarff('TrainingDataset.arff')
-df = pd.DataFrame(data[0])
-df.to_csv('TrainingDataset.csv', index=False)
-print("Dataset successfully converted to CSV!")
-🧠 Model Training
-Run the following script to train your model:
+     data = arff.loadarff('TrainingDataset.arff')
+     df = pd.DataFrame(data[0])
+     df.to_csv('TrainingDataset.csv', index=False)
+     print("Dataset successfully converted to CSV!")
+ 
+ 🧠 Model Training
+ Run the following script to train your model:
 
 
-python train_model.py
+    python train_model.py
+    
 It will create a trained model file named:
 
 
-phishing_model_light.joblib
+ phishing_model_light.joblib
+
+ 
 🔍 URL Prediction
 Once your model is trained, run the following script to check a URL:
 
 
-python predict_url.py
+    python predict_url.py
+    
 You will be prompted to enter a URL, and the model will classify it as either:
 
 Legitimate
