@@ -1,54 +1,34 @@
-import re
-import joblib
+
 import pandas as pd
-from urllib.parse import urlparse
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from joblib import dump
 
-# Model load
-model = joblib.load("phishing_model_light.joblib")
+#  Corrected CSV path (Use raw string or double backslash)
+df = pd.read_csv(r"C:\Users\Faisal_bugti\Desktop\phishing_url_detecter\phishing_data.csv")
 
-# ---- Feature extraction ----
-def having_ip(url):
-    return 1 if re.search(r'(\d{1,3}\.){3}\d{1,3}', url) else -1
+#  Print available columns in CSV
+print("Available columns in dataset:\n", df.columns)
 
-def url_length(url):
-    return 1 if len(url) < 54 else 0 if len(url) <= 75 else -1
-
-def having_at_symbol(url):
-    return 1 if "@" not in url else -1
-
-def double_slash_redirecting(url):
-    return -1 if url.count("//") > 1 else 1
-
-def prefix_suffix(url):
-    return -1 if "-" in urlparse(url).netloc else 1
-
-def subdomain(url):
-    dots = urlparse(url).netloc.split(".")
-    return -1 if len(dots) > 3 else 1
-
-def extract_features(url):
-    return [
-        having_ip(url),
-        url_length(url),
-        having_at_symbol(url),
-        double_slash_redirecting(url),
-        prefix_suffix(url),
-        subdomain(url)
-    ]
-
-# ---- User input ----
-url = input("Enter URL to check: ")
-features = extract_features(url)
-
-# DataFrame for prediction
-df = pd.DataFrame([features], columns=[
+#  Use only existing features
+# Update this list according to the printed column names
+selected_features = [
     'having_IP_Address',
     'URL_Length',
     'having_At_Symbol',
     'double_slash_redirecting',
-    'Prefix_Suffix',
-    'Subdomain'
-])
+    'Prefix_Suffix'
+    # 'Subdomain' removed since it's missing
+]
 
-prediction = model.predict(df)[0]
-print("Prediction:", "Phishing Website" if prediction == -1 else "Legitimate Website")
+# Features & Labels
+X = df[selected_features]
+y = df['Result']
+
+#  Train Model
+model = RandomForestClassifier(random_state=42)
+model.fit(X, y)
+
+# Save Model
+dump(model, "phishing_model_light.joblib")
+print("✅ Lightweight phishing detection model trained and saved successfully!")
